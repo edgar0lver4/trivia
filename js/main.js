@@ -23,15 +23,10 @@ function genera(){
     var dificul= document.getElementById('select_dific').value;
     var tipo = document.getElementById('select_tipe').value;
 
-    if(categor == 0){
-        fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
-        .then(response => response.json())
-        .then(data => printCards(data));
-    }else{
-        fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
-        .then(response => response.json())
-        .then(data => printCards(data));
-    }
+    fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
+    .then(response => response.json())
+    .then(data => printCards(data));
+    
 }
 
 function printCards(questions){
