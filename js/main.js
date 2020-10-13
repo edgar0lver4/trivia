@@ -11,7 +11,7 @@ function view_cats(){
     .then((resp)=>{
         console.log(resp);
         resp.trivia_categories.forEach((categories) =>{
-            selectCat.innerHTML += `<option value='${categories.id}'>${categories.name}</option>`
+            selectCat.innerHTML += `<option value='${categories.id}'>${categories.name}</option>`;
         });
     });
 }
@@ -20,9 +20,18 @@ function genera(){
     arrp = [];
     var amount = document.getElementById('amount').value;
     var categor= document.getElementById('select_category').value;
-    fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor)
-    .then(response => response.json())
-    .then(data => printCards(data));
+    var dificul= document.getElementById('select_dific').value;
+    var tipo = document.getElementById('select_tipe').value;
+
+    if(categor == 0){
+        fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
+        .then(response => response.json())
+        .then(data => printCards(data));
+    }else{
+        fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
+        .then(response => response.json())
+        .then(data => printCards(data));
+    }
 }
 
 function printCards(questions){
@@ -36,6 +45,8 @@ function printCards(questions){
         container.innerHTML += card;
         id++;
     });
+    const boton = `<button class="btn btn-success" onclick="getResult()">Calificar</button>`;
+    container.innerHTML += boton;
 }
 
 function creatCard(question,id){
