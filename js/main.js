@@ -4,6 +4,19 @@ var arrp= [];
 
 document.addEventListener('load',view_cats());
 
+function genera(){
+    arrp = [];
+    var amount = document.getElementById('amount').value;
+    var categor= document.getElementById('select_category').value;
+    var dificul= document.getElementById('select_dific').value;
+    var tipo = document.getElementById('select_tipe').value;
+
+    fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
+    .then(response => response.json()) //Transforma la informacion a json
+    .then(data => printCards(data)); //Llamamos a la funcion printcards y mandamos la informacion json
+    
+}
+
 function view_cats(){
     var selectCat = document.getElementById('select_category');
     fetch('https://opentdb.com/api_category.php')
@@ -16,23 +29,24 @@ function view_cats(){
     });
 }
 
-function genera(){
-    arrp = [];
-    var amount = document.getElementById('amount').value;
-    var categor= document.getElementById('select_category').value;
-    var dificul= document.getElementById('select_dific').value;
-    var tipo = document.getElementById('select_tipe').value;
-
-    fetch('https://opentdb.com/api.php?amount='+amount+'&category='+categor+"&type="+tipo+"&difficulty="+dificul)
-    .then(response => response.json())
-    .then(data => printCards(data));
-    
-}
-
 function printCards(questions){
     const container = document.getElementById('container');
-    container.innerHTML = '';
+    container.innerHTML = '';//Resetea
     //Print a cards with bootstrap
+    const u = [
+        {
+            algo:'x',
+            response:0,
+            result:[
+                {
+                    r:'1'
+                }
+            ]
+        },
+        {
+            algo:'x2'
+        }
+    ]
     console.log(questions);
     var id = 0;
     questions.results.forEach((question) => {
@@ -59,27 +73,30 @@ function returnAnswersHTML(correct,incorrects,id){
     var j = 0;
     var iscorrect = false;
     var indexIsCorrect = 0;
-    var arrquestions = [];
+    var arranswers = [];
     var tot = incorrects.length;
+    // Total respuestas = respuestas_incorrectas + respuesta correcta = respuestas_incorrectas+1 r 4 -> 0 to 3 [0,1,2,3]
+    // Generamos un arreglo de respuestas aleatorias
     for(var i = 0; i <= tot; i++){
         let random = Math.random(Math.floor(4))*10;
-        if(random > 6 && iscorrect == false){
-            arrquestions.push(correct);
+        if(random > 6 && iscorrect == false){//Aun no hemos encontrado el numero > 6 y no hay aun respuesta correcta en el arranswers
+            arranswers.push(correct);
             iscorrect = true;
             indexIsCorrect = i;
-        }else if(i+1 > tot && iscorrect == false){
-            arrquestions.push(correct);
+        }else if(i+1 > tot && iscorrect == false){//Ya vamos a terminar de recorrer las respuestas y aun no metemos la respuesta correctas
+            arranswers.push(correct);
             iscorrect = true;
             indexIsCorrect = i;
-        }else{
-            arrquestions.push(incorrects[j]);
+        }else{//Metemos respuestas incorrectas
+            arranswers.push(incorrects[j]);
             j++;
         }
     }
+    /*******--------------------------------------*/
     var answers = '';
     j = 0;
-    arrquestions.forEach((results) => {
-        if(j != indexIsCorrect){
+    arranswers.forEach((results) => {
+        if(j != indexIsCorrect){//Mostramos las respuesta incorrectas
             let viewquest = `
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="question_${id}" id="reps_${id}_${j}" value="${results}" onclick="changeScore(0,${id})">
@@ -89,7 +106,7 @@ function returnAnswersHTML(correct,incorrects,id){
             </div>`;
             
             answers += viewquest;
-        }else{
+        }else{//Mostramos la respuesta correcta
             let viewquest = `
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="question_${id}" id="reps_${id}_${j}" value="${results}" onclick="changeScore(1,${id})">
