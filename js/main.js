@@ -6,6 +6,7 @@ document.addEventListener('load',view_cats());
 
 function genera(){
     arrp = [];
+    tot = 0;
     var amount = document.getElementById('amount').value;
     var categor= document.getElementById('select_category').value;
     var dificul= document.getElementById('select_dific').value;
@@ -134,5 +135,17 @@ function changeScore(value,id){
 }
 
 function getResult(){
-    alert("Tu calificacion es:"+tot);
+    let calif = (tot/parseInt(document.getElementById('amount').value))*10;
+    if(localStorage.getItem("past_punt") == null){
+        alert("Tu calificación es:"+calif);
+        localStorage.setItem("past_punt",calif);
+    }else{
+        if(parseInt(localStorage.getItem("past_punt")) > calif){
+            var mayor = parseInt(localStorage.getItem("past_punt"));
+        }else{
+            mayor = calif;
+            localStorage.setItem("past_punt",calif);
+        }
+        alert("Tu calificación es:"+calif+"\nTu mejor calificación:"+mayor);
+    }
 }
